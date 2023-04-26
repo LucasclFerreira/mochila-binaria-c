@@ -42,7 +42,7 @@ type_item *algoritmo_2(int n_items, int capacidad, type_item *items, int *tam_ar
 
     int x = 0;
     type_item temp;
-    type_item *items_escolhidos = malloc(sizeof(type_item));
+    type_item *items_escolhidos = malloc(sizeof(type_item) * n_items);
 
     while (n_items != 0) {
 		if (tabela[n_items][capacidad] != tabela[n_items - 1][capacidad]) {
@@ -51,7 +51,7 @@ type_item *algoritmo_2(int n_items, int capacidad, type_item *items, int *tam_ar
             temp.beneficio = items[n_items - 1].beneficio;
 
 			items_escolhidos[x++] = temp;
-            items_escolhidos = realloc(items_escolhidos, sizeof(type_item) * x);
+            //items_escolhidos = realloc(items_escolhidos, sizeof(type_item) * x);
 
 			capacidad = capacidad - items[n_items - 1].peso;
 		}
@@ -119,16 +119,7 @@ int main(int argc, char *argv[]) {
     //printf("\nBENEFICIO MAXIMO ALG1: %d\n", beneficio_max_alg1);
     printf("BENEFICIO MAXIMO ALG2: %d\n", beneficio_max_alg2);
 
-    if (argv[2] == "1") {
-        algoritmo_1(n_items, capacidad, items);
-    } else if (argv[2] == "2") {
-        //algoritmo_2(n_items, capacidad, items);
-    } else if (argv[2] == "3") {
-        algoritmo_3(n_items, capacidad, items);
-    } else {
-        printf("Escolha um algoritmo entre 1 e 3\n");
-        return 1;
-    }
+    free(items_escolhidos);
     free(items);
     return 0;
 }
