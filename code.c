@@ -25,7 +25,11 @@ int algoritmo_1(int n_items, int capacidad, type_item *items) {
 
 type_item *algoritmo_2(int n_items, int capacidad, type_item *items, int *tam_arr) {
     int i, j;
-    int tabela[n_items + 1][capacidad + 1];
+    
+    int **tabela = malloc(sizeof(int*) * (n_items + 1));
+    for (i = 0; i <= n_items; i++) {
+        tabela[i] = malloc(sizeof(int) * (capacidad + 1));
+    }
 
     for (i = 0; i <= n_items; i++) {
         for (j = 0; j <= capacidad; j++) {
@@ -41,6 +45,7 @@ type_item *algoritmo_2(int n_items, int capacidad, type_item *items, int *tam_ar
     int beneficio_max = tabela[n_items][capacidad];
 
     int x = 0;
+    int max_items = n_items;
     type_item temp;
     type_item *items_escolhidos = malloc(sizeof(type_item) * n_items);
 
@@ -51,7 +56,10 @@ type_item *algoritmo_2(int n_items, int capacidad, type_item *items, int *tam_ar
             temp.beneficio = items[n_items - 1].beneficio;
 
 			items_escolhidos[x++] = temp;
-            //items_escolhidos = realloc(items_escolhidos, sizeof(type_item) * x);
+            if (x == max_items) {
+                max_items *= 2;
+                items_escolhidos = realloc(items_escolhidos, sizeof(type_item) * max_items);
+            }
 
 			capacidad = capacidad - items[n_items - 1].peso;
 		}
