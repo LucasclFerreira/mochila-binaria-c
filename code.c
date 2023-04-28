@@ -12,18 +12,6 @@ int encontra_max(int a, int b) {
     return b;
 }
 
-int algoritmo_1(int n_items, int capacidad, type_item *items) {
-    // força BRUTAL
-    if (n_items == 0 || capacidad == 0)
-        return 0;
-
-    if (items[n_items - 1].peso > capacidad)
-        return algoritmo_1(n_items - 1, capacidad, items);
-    else
-        return encontra_max(items[n_items - 1].beneficio + algoritmo_1(n_items - 1, capacidad - items[n_items - 1].peso, items), algoritmo_1(n_items - 1, capacidad, items));
-
-}
-
 type_item *algoritmo_2(int n_items, int capacidad, type_item *items, int *tam_arr) {
     int i, j;
     
@@ -126,7 +114,7 @@ int main(int argc, char *argv[]) {
     inicio_t = clock();
     type_item *items_escolhidos = algoritmo_2(n_items, capacidad, items, &tam_arr);
     fim_t = clock();
-    total_t = (double)(fim_t - inicio_t) / CLOCKS_PER_SEC;
+    total_t = (double)(fim_t - inicio_t) / CLOCKS_PER_SEC;  // tempo em milisegundos
 
     for (int i = 0; i < tam_arr; i++) {
         printf("\tItem %d -- PESO = %d e BENEFICIO %d\n", i, items_escolhidos[i].peso, items_escolhidos[i].beneficio);
@@ -135,7 +123,7 @@ int main(int argc, char *argv[]) {
 
     //printf("\nBENEFICIO MAXIMO ALG1: %d\n", beneficio_max_alg1);
     printf("\t\t\tPRONTO!\n\nBENEFICIO MAXIMO ALG2: %d\n", beneficio_max_alg2);
-    printf("Tempo total algoritmo: %lf", total_t);
+    printf("Tempo total algoritmo: %lf segundos", total_t);
 
     free(items_escolhidos);
     free(items);
