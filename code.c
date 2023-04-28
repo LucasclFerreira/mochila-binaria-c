@@ -12,6 +12,18 @@ int encontra_max(int a, int b) {
     return b;
 }
 
+int algoritmo_1(int n_items, int capacidad, type_item *items) {
+    // força BRUTAL
+    if (n_items == 0 || capacidad == 0)
+        return 0;
+
+    if (items[n_items - 1].peso > capacidad)
+        return algoritmo_1(n_items - 1, capacidad, items);
+    else
+        return encontra_max(items[n_items - 1].beneficio + algoritmo_1(n_items - 1, capacidad - items[n_items - 1].peso, items), algoritmo_1(n_items - 1, capacidad, items));
+
+}
+
 type_item *algoritmo_2(int n_items, int capacidad, type_item *items, int *tam_arr) {
     int i, j;
     
