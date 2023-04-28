@@ -11,16 +11,30 @@ int encontra_max(int a, int b) {
     return b;
 }
 
-int algoritmo_1(int n_items, int capacidad, type_item *items) {
-    // força BRUTAL
-    if (n_items == 0 || capacidad == 0)
-        return 0;
+int algoritmo_1(int n_items, int capacidad, type_item *items, int i) {
+    // Algoritmo de força bruta
+    //int pos = 0;
+    int val_incl;
+    int val_excl;
+    //int *items_escolhidos = malloc(sizeof(type_item) * n_items);
+    
+    if (i == n_items || capacidad <= 0) return 0;
 
-    if (items[n_items - 1].peso > capacidad)
-        return algoritmo_1(n_items - 1, capacidad, items);
-    else
-        return encontra_max(items[n_items - 1].beneficio + algoritmo_1(n_items - 1, capacidad - items[n_items - 1].peso, items), algoritmo_1(n_items - 1, capacidad, items));
+    // if (items_escolhidos[pos] > 0) {
+    //     return items_escolhidos[pos];
+    // }
 
+    if (items[i].peso < capacidad) {
+        val_incl = algoritmo_1(n_items, capacidad - items[i].peso, items, i + 1) + items[i].beneficio;
+        val_excl = algoritmo_1(n_items, capacidad - items[i].peso, items, i + 1);
+        //items_escolhidos[pos++] = encontra_max(val_incl, val_excl);
+        return encontra_max(val_incl, val_excl);
+    } else {
+        val_excl = algoritmo_1(n_items, capacidad - items[i].peso, items, i + 1);
+        //items_escolhidos[pos++] = val_excl;
+        return val_excl;
+    }
+    // return items_escolhidos[pos];
 }
 
 type_item *algoritmo_2(int n_items, int capacidad, type_item *items, int *tam_arr) {
