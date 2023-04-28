@@ -106,8 +106,8 @@ type_item *ler_items(char *filename, int *n_items, int *capacidad) {
 int main(int argc, char *argv[]) {
     int n_items, capacidad;
 
-    if (argc != 3) {
-        printf("Uso: %s <nome do arquivo de entrada> <algoritmo>\n", argv[0]);
+    if (argc != 2) {
+        printf("Uso: %s <nome do arquivo de entrada>\n", argv[0]);
         return 1;
     }
 
@@ -117,6 +117,7 @@ int main(int argc, char *argv[]) {
     int tam_arr;
     //int beneficio_max_alg1 = algoritmo_1(n_items, capacidad, items);
     int beneficio_max_alg2 = 0;
+    printf("\t\tExecutando o algoritmo...\n");
     type_item *items_escolhidos = algoritmo_2(n_items, capacidad, items, &tam_arr);
 
     for (int i = 0; i < tam_arr; i++) {
@@ -125,7 +126,7 @@ int main(int argc, char *argv[]) {
     }
 
     //printf("\nBENEFICIO MAXIMO ALG1: %d\n", beneficio_max_alg1);
-    printf("BENEFICIO MAXIMO ALG2: %d\n", beneficio_max_alg2);
+    printf("\t\t\tPRONTO!\n\nBENEFICIO MAXIMO ALG2: %d\n", beneficio_max_alg2);
 
     free(items_escolhidos);
     free(items);
