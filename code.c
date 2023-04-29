@@ -12,7 +12,7 @@ int encontra_max(int a, int b) {
     return b;
 }
 
-type_item *algoritmo_2(int n_items, int capacidad, type_item *items, int *tam_arr) {
+type_item *programacao_dinamica(int n_items, int capacidad, type_item *items, int *tam_arr) {
     int i, j;
     
     int **tabela = malloc(sizeof(int*) * (n_items + 1));
@@ -40,7 +40,6 @@ type_item *algoritmo_2(int n_items, int capacidad, type_item *items, int *tam_ar
 
     while (n_items != 0) {
 		if (tabela[n_items][capacidad] != tabela[n_items - 1][capacidad]) {
-			//printf("\tItem %d com PESO = %d e BENEFICIO %d\n", n_items, items[n_items - 1].peso, items[n_items - 1].beneficio);
             temp.peso = items[n_items - 1].peso;
             temp.beneficio = items[n_items - 1].beneficio;
 
@@ -61,7 +60,49 @@ type_item *algoritmo_2(int n_items, int capacidad, type_item *items, int *tam_ar
     return items_escolhidos;
 }
 
-void algoritmo_3(int n_items, int capacidad, type_item *items) {}
+type_item *forca_bruta(type_item *items, int n_items, int capacidad) {
+    int i, j, beneficio_max = 0, peso_max = 0;
+    int escolhas = 0;
+    int num_items_escolhidos = 0;
+    type_item *items_escolhidos = malloc(n_items * sizeof(type_item));
+
+    for (i = 0; i < (1 << n_items); i++) {
+        int peso_atual = 0, beneficio_atual = 0;
+
+        for (j = 0; j < n_items; j++) {
+            if (i & (1 << j)) {
+                peso_atual += items[j].peso;
+                beneficio_atual += items[j].beneficio;
+            }
+        }
+
+        if (peso_atual <= capacidad && beneficio_atual > beneficio_max) {
+            beneficio_max = beneficio_atual;
+            peso_max = peso_atual;
+            escolhas = i;
+            num_items_escolhidos = 0;
+
+            for (j = 0; j < n_items; j++) {
+                if (i & (1 << j)) {
+                    items_escolhidos[num_items_escolhidos++] = items[j];
+                }
+            }
+        }
+    }
+
+    printf("Items escolhidos: ");
+    for (i = 0; i < n_items; i++) {
+        if (escolhas & (1 << i)) {
+            printf("Item %d; ", i + 1);
+        }
+    }
+    printf("\nPeso total: %d\nBeneficio total: %d\n", peso_max, beneficio_max);
+
+    printf("Total de items escolhidos =  %d\n", num_items_escolhidos);
+    items_escolhidos = realloc(items_escolhidos, num_items_escolhidos * sizeof(type_item));
+
+    return items_escolhidos;
+}
 
 void imprimir_items(type_item *items, int n) {
     int i;
@@ -108,21 +149,23 @@ int main(int argc, char *argv[]) {
 
     int tam_arr;
     //int beneficio_max_alg1 = algoritmo_1(n_items, capacidad, items);
-    int beneficio_max_alg2 = 0;
+    int beneficio_max_prog_dinam = 0;
+    int peso_max = 0;
     printf("\t\tExecutando o algoritmo...\n");
 
     inicio_t = clock();
-    type_item *items_escolhidos = algoritmo_2(n_items, capacidad, items, &tam_arr);
+    type_item *items_escolhidos = programacao_dinamica(n_items, capacidad, items, &tam_arr);
     fim_t = clock();
     total_t = (double)(fim_t - inicio_t) / CLOCKS_PER_SEC;  // tempo em milisegundos
 
     for (int i = 0; i < tam_arr; i++) {
         printf("\tItem %d -- PESO = %d e BENEFICIO %d\n", i, items_escolhidos[i].peso, items_escolhidos[i].beneficio);
-        beneficio_max_alg2 += items_escolhidos[i].beneficio;
+        beneficio_max_prog_dinam += items_escolhidos[i].beneficio;
+        peso_max += items_escolhidos[i].peso;
     }
 
     //printf("\nBENEFICIO MAXIMO ALG1: %d\n", beneficio_max_alg1);
-    printf("\t\t\tPRONTO!\n\nBENEFICIO MAXIMO ALG2: %d\n", beneficio_max_alg2);
+    printf("\t\t\tPRONTO!\n\nBENEFICIO E PESO MAXIMO ALG2: %d | %d\n", beneficio_max_prog_dinam, peso_max);
     printf("Tempo total algoritmo: %lf segundos", total_t);
 
     free(items_escolhidos);
