@@ -17,52 +17,6 @@ int encontra_max(int a, int b) {
     return b;
 }
 
-type_item * add(type_item *item,int num_combinacoes, type_item number){
-    //adiciona o item ao vetor de combinações
-    type_item *new_item = (type_item *)malloc((num_combinacoes+1) * sizeof(type_item));
-    for(int i=0;i<num_combinacoes;i++){
-        new_item[i] = item[i];
-    }
-    new_item[num_combinacoes] = number;
-    return new_item;
-}
-
-void permutacao(type_item *item, type_item *combinacoes,int tam_combinacoes, int num_items,int capacidad){
-    //termina a recursão quando o tamanho das combinações for maior que o numero de itens
-    if(tam_combinacoes>num_items){
-        return;
-    }
-    //verifica a soma o peso e o beneficio da combinação atual
-    float beneficio = 0, peso = 0;
-    for(int i=0;i<tam_combinacoes;i++){
-        beneficio+=combinacoes[i].beneficio;
-        peso+=combinacoes[i].peso;
-    }
-    printf("Peso: %f, Beneficio: %f\n",peso,beneficio);
-    //verifica se a combinação atual é melhor que a solução ótima
-    if(peso<=capacidad && beneficio>=maior_beneficio){
-        maior_peso = peso;
-        maior_beneficio = beneficio;
-        tam_solucao_otima = tam_combinacoes;
-        solucao_otima = combinacoes;
-    }
-    //percorre todos os itens
-    for(int i=0;i<num_items;i++){
-        bool contem = false;
-        //verifica se o item atual já está na combinação atual
-        for(int j=0;j<tam_combinacoes;j++){
-            if(item[i].peso == combinacoes[j].peso && item[i].beneficio == combinacoes[j].beneficio){
-                contem = true;
-            }
-        }
-        if(!contem){
-            //chama a função permutação para cada item que não está na combinação atual
-            permutacao(item,add(combinacoes,tam_combinacoes,item[i]),tam_combinacoes+1,num_items,capacidad);
-        }
-        contem = false;
-    }
-}
-
 int compare(const void *a, const void *b) {
     type_item *itemA = (type_item *)a;
     type_item *itemB = (type_item *)b;
@@ -133,6 +87,52 @@ void forca_bruta(type_item *item, int num_items, int capacidad) {
         elemento_unico[0] = item[i];
         permutacao(item,elemento_unico,1,num_items,capacidad); 
    }
+}
+
+type_item * add(type_item *item,int num_combinacoes, type_item number){
+    //adiciona o item ao vetor de combinações
+    type_item *new_item = (type_item *)malloc((num_combinacoes+1) * sizeof(type_item));
+    for(int i=0;i<num_combinacoes;i++){
+        new_item[i] = item[i];
+    }
+    new_item[num_combinacoes] = number;
+    return new_item;
+}
+
+void permutacao(type_item *item, type_item *combinacoes,int tam_combinacoes, int num_items,int capacidad){
+    //termina a recursão quando o tamanho das combinações for maior que o numero de itens
+    if(tam_combinacoes>num_items){
+        return;
+    }
+    //verifica a soma o peso e o beneficio da combinação atual
+    float beneficio = 0, peso = 0;
+    for(int i=0;i<tam_combinacoes;i++){
+        beneficio+=combinacoes[i].beneficio;
+        peso+=combinacoes[i].peso;
+    }
+    printf("Peso: %f, Beneficio: %f\n",peso,beneficio);
+    //verifica se a combinação atual é melhor que a solução ótima
+    if(peso<=capacidad && beneficio>=maior_beneficio){
+        maior_peso = peso;
+        maior_beneficio = beneficio;
+        tam_solucao_otima = tam_combinacoes;
+        solucao_otima = combinacoes;
+    }
+    //percorre todos os itens
+    for(int i=0;i<num_items;i++){
+        bool contem = false;
+        //verifica se o item atual já está na combinação atual
+        for(int j=0;j<tam_combinacoes;j++){
+            if(item[i].peso == combinacoes[j].peso && item[i].beneficio == combinacoes[j].beneficio){
+                contem = true;
+            }
+        }
+        if(!contem){
+            //chama a função permutação para cada item que não está na combinação atual
+            permutacao(item,add(combinacoes,tam_combinacoes,item[i]),tam_combinacoes+1,num_items,capacidad);
+        }
+        contem = false;
+    }
 }
 
 void guloso(type_item *item, int num_items, int capacidad) { 
@@ -246,10 +246,10 @@ int main(int argc, char *argv[]) {
     // total_t_forca_bruta = (double)(fim_t - inicio_t) / (CLOCKS_PER_SEC/1000);
 
     // guloso
-    inicio_t = clock();
-    guloso(items, n_items, capacidad);
-    fim_t = clock();
-    total_t_guloso = (double)(fim_t - inicio_t) / (CLOCKS_PER_SEC/1000);
+    // inicio_t = clock();
+    // guloso(items, n_items, capacidad);
+    // fim_t = clock();
+    // total_t_guloso = (double)(fim_t - inicio_t) / (CLOCKS_PER_SEC/1000);
 
     printf("\t\t\tPRONTO!\n\nBENEFICIO E PESO MAXIMO PROGRAMACAO DINAMICA: %d | %d\n", beneficio_max_prog_dinam, peso_max_prog_dinam);
     //printf("Tempo total forca bruta: %.0lf milisegundos\n", total_t_forca_bruta);
